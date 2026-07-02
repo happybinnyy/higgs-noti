@@ -1,4 +1,4 @@
-# AI필드 (aifield)
+# AI필드 (AIfield)
 
 AI 웹서비스를 편하게 쓰기 위한 **브라우저 유저스크립트 모음**입니다.
 (AIfield — userscripts that make AI web apps nicer to use.)

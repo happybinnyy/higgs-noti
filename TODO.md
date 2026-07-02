@@ -1,4 +1,4 @@
-# AI필드 (aifield) — 할 일
+# AI필드 (AIfield) — 할 일
 
 > 이 프로젝트에서 진행할 작업 목록. 완료하면 `[x]`로 체크.
 > 현재 상태: 로컬 git 저장소 생성 완료(main, 커밋 2개). GitHub 미공개.
@@ -7,7 +7,7 @@
 - [ ] 공개 여부 결정 (public / private)
 - [ ] 리포 생성 + 푸시
   ```bash
-  gh repo create aifield --public --source=. --remote=origin --push \
+  gh repo create AIfield --public --source=. --remote=origin --push \
     --description "AI필드 — AI 웹서비스 편의 유저스크립트 모음 (비공식)"
   ```
   (`gh`는 이미 happybinnyy로 로그인됨)
@@ -23,13 +23,13 @@
 - [ ] GreasyFork 계정 만들기
 - [ ] `higgsfield-notify.user.js` 업로드
 - [ ] `@downloadURL` / `@updateURL` 경로 확인
-      (현재: `raw.githubusercontent.com/happybinnyy/aifield/main/higgsfield-notify/...`)
+      (현재: `raw.githubusercontent.com/happybinnyy/AIfield/main/higgsfield-notify/...`)
 - [ ] 설치 링크를 README에 추가
 
 ## 4. 브랜딩 (선택)
 - [ ] 아이콘/로고 → 스크립트에 `@icon` 추가
-- [ ] 도메인 `aifield.*` 가용성 확인 (instantdomainsearch / porkbun / cloudflare)
-- [ ] GitHub Pages 소개 페이지 (`happybinnyy.github.io/aifield`)
+- [ ] 도메인 `AIfield.*` 가용성 확인 (instantdomainsearch / porkbun / cloudflare)
+- [ ] GitHub Pages 소개 페이지 (`happybinnyy.github.io/AIfield`)
 
 ## 5. 도구 로드맵
 - [x] **higgsfield-notify** — 힉스필드 영상 생성 완료 알림 (v1.0.0, 작동 확인 완료)
