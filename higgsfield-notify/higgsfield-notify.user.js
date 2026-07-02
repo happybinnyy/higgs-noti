@@ -1,20 +1,20 @@
 // ==UserScript==
 // @name         Higgsfield Generation Done Notifier
 // @name:ko      힉스필드 생성 완료 알림
-// @namespace    https://github.com/<GITHUB_USER>/aifield
+// @namespace    https://github.com/happybinnyy/aifield
 // @version      1.0.0
 // @description  Notifies with an in-page banner, a sound, and a desktop notification when a Higgsfield video generation finishes. Unofficial, not affiliated with Higgsfield.
 // @description:ko 힉스필드 영상 생성이 끝나면 화면 배너 + 소리 + 데스크톱 알림으로 알려줍니다. 비공식 도구(제작사와 무관).
-// @author       <YOUR_NAME>
+// @author       happybinnyy
 // @match        https://higgsfield.ai/*
 // @match        https://*.higgsfield.ai/*
 // @grant        GM_notification
 // @run-at       document-idle
 // @license      MIT
-// @homepageURL  https://github.com/<GITHUB_USER>/aifield
-// @supportURL   <DONATION_OR_ISSUES_URL>
-// @downloadURL  https://raw.githubusercontent.com/<GITHUB_USER>/aifield/main/higgsfield-notify/higgsfield-notify.user.js
-// @updateURL    https://raw.githubusercontent.com/<GITHUB_USER>/aifield/main/higgsfield-notify/higgsfield-notify.user.js
+// @homepageURL  https://github.com/happybinnyy/aifield
+// @supportURL   https://github.com/happybinnyy/aifield/issues
+// @downloadURL  https://raw.githubusercontent.com/happybinnyy/aifield/main/higgsfield-notify/higgsfield-notify.user.js
+// @updateURL    https://raw.githubusercontent.com/happybinnyy/aifield/main/higgsfield-notify/higgsfield-notify.user.js
 // ==/UserScript==
 (function () {
   'use strict';
