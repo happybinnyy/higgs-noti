@@ -8,11 +8,12 @@
 - [x] 리포 생성 + 푸시 → https://github.com/happybinnyy/higgs-noti
 - [x] 리포 토픽(태그): `userscript`, `tampermonkey`, `higgsfield`, `ai`
 
-## 2. 후원 (Donation)
-- [ ] 후원 플랫폼 정하기 (GitHub Sponsors / Ko-fi / Toss·카카오)
-- [ ] `README.md` 후원 섹션의 `<LINK>` 채우기
-- [ ] (GitHub Sponsors 선택 시) `.github/FUNDING.yml`에 `github: happybinnyy` 한 줄 추가
-- [ ] 스크립트 헤더 `@supportURL` 을 후원 링크로 교체 (지금은 이슈 페이지)
+## 2. 후원 (Donation) — GitHub Sponsors 선택 (2026-07-02)
+- [x] 후원 플랫폼 정하기 → **GitHub Sponsors**
+- [x] `README.md` 후원 섹션 채우기 (Sponsors 링크 + 배지)
+- [x] `.github/FUNDING.yml`에 `github: happybinnyy` 추가
+- [ ] **★ GitHub Sponsors 프로그램 가입·승인** (본인이 웹에서: https://github.com/sponsors — 신원확인·Stripe 연결 필요). **가입 전까지는 Sponsor 버튼/링크가 동작하지 않음.**
+- [~] `@supportURL` 은 이슈 페이지 그대로 유지 (support=문의 용도가 맞음. 후원은 Sponsor 버튼+README로 분리)
 
 ## 3. GreasyFork 배포 (자동 업데이트용)
 - [ ] GreasyFork 계정 만들기 (웹에서 직접)

@@ -40,8 +40,12 @@
 ## 후원 (Donation)
 
 이 도구가 도움이 되었다면 후원으로 응원해 주세요 🙏
-<!-- TODO: 후원 링크 확정 후 채우기 -->
-- `<LINK>`
+
+[![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-db61a2?logo=githubsponsors)](https://github.com/sponsors/happybinnyy)
+
+- GitHub Sponsors: https://github.com/sponsors/happybinnyy
+
+리포 상단의 **♥ Sponsor** 버튼으로도 후원할 수 있습니다.
 
 ## 라이선스
 
