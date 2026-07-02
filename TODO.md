@@ -1,17 +1,12 @@
 # 힉스노티 (Higgs Noti) — 할 일
 
 > 힉스필드 생성 완료 알림 유저스크립트. 단일 도구 프로젝트.
-> 현재 상태: 로컬 git 저장소(main). GitHub 미공개. 저장소명 후보 `higgs-noti`.
+> 현재 상태: GitHub 공개됨 (https://github.com/happybinnyy/higgs-noti). 저장소명 `higgs-noti`.
 
-## 1. GitHub 공개
-- [ ] 공개 여부 결정 (public / private)
-- [ ] 리포 생성 + 푸시
-  ```bash
-  gh repo create higgs-noti --public --source=. --remote=origin --push \
-    --description "힉스노티 — 힉스필드 영상 생성 완료 알림 유저스크립트 (비공식)"
-  ```
-  (`gh`는 이미 happybinnyy로 로그인됨)
-- [ ] 리포 토픽(태그): `userscript`, `tampermonkey`, `higgsfield`, `ai`
+## 1. GitHub 공개 ✅ 완료 (2026-07-02)
+- [x] 공개 여부 결정 → public
+- [x] 리포 생성 + 푸시 → https://github.com/happybinnyy/higgs-noti
+- [x] 리포 토픽(태그): `userscript`, `tampermonkey`, `higgsfield`, `ai`
 
 ## 2. 후원 (Donation)
 - [ ] 후원 플랫폼 정하기 (GitHub Sponsors / Ko-fi / Toss·카카오)
