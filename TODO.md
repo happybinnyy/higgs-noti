@@ -47,6 +47,12 @@ GreasyFork는 자기가 호스팅하는 스크립트의 `@downloadURL`/`@updateU
 - [ ] (선택) `@version` 올릴 때 GitHub·GreasyFork 버전 일치 확인
 - [ ] 힉스노티가 GreasyFork에서 정상 설치되는지 1회 실제 확인
 
+## 다국어 (i18n) ✅ 완료 (2026-07-02)
+- [x] 스크립트 메타데이터 `@name`/`@description` 7개 언어 (en/ko/zh-CN/ru/es/pt-BR/ja)
+- [x] README 7개 언어 분리 (`README.md`=영어 기본 + `README.<lang>.md`, 상단 언어 전환 링크)
+- [x] GitHub 리포 description 영어로 교체
+- 유지보수: 내용 바뀌면 7개 파일 모두 갱신 필요. `higgs-noti.user.js` 헤더 다국어도 동기화.
+
 ## 4. 브랜딩 (선택)
 - [ ] 아이콘/로고 → 스크립트에 `@icon` 추가
 - [ ] GitHub Pages 소개 페이지

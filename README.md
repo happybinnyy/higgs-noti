@@ -1,56 +1,58 @@
-# 힉스노티 (Higgs Noti)
+# Higgs Noti
 
-힉스필드([higgsfield.ai](https://higgsfield.ai))에서 **영상 생성이 끝나면** 알려주는 브라우저 유저스크립트입니다.
-생성 완료 시점이 매번 달라 탭을 계속 지켜봐야 하는 번거로움을 없애줍니다.
+**English** | [한국어](README.ko.md) | [简体中文](README.zh-CN.md) | [Русский](README.ru.md) | [Español](README.es.md) | [Português (BR)](README.pt-BR.md) | [日本語](README.ja.md)
 
-> ⚠️ **비공식(unofficial)** 도구입니다. Higgsfield 제작사와 아무 관련이 없습니다.
-> 페이지 화면(DOM)만 읽어 알림을 띄울 뿐, 콘텐츠를 수집·재배포하거나 결제를 우회하지 않습니다.
+A browser userscript that notifies you when a video generation finishes on Higgsfield ([higgsfield.ai](https://higgsfield.ai)).
+Generation time varies every time, so you no longer need to keep watching the tab.
 
-## 기능
+> ⚠️ **Unofficial** tool. Not affiliated with Higgsfield in any way.
+> It only reads the page (DOM) to show a notification — it does not collect or redistribute content, nor bypass any payment.
 
-- **화면 배너** — 권한 불필요, 무조건 보임
-- **소리** — 페이지를 한 번 클릭해 둔 뒤부터 재생됨 (브라우저 자동재생 정책)
-- **데스크톱 알림** — OS/브라우저 알림 허용 시
-- **탭 제목 ✅ 표시** — 다른 탭에 있어도 눈에 띔
+## Features
 
-## 설치
+- **On-page banner** — no permission needed, always visible
+- **Sound** — plays once you've clicked the page at least once (browser autoplay policy)
+- **Desktop notification** — when OS/browser notifications are allowed
+- **Tab title ✅ marker** — noticeable even when you're on another tab
 
-1. 브라우저에 [Tampermonkey](https://www.tampermonkey.net/) 설치
-2. ★ **"사용자 스크립트 허용(Allow User Scripts)" 켜기** — 최신 크롬/엣지/웨일 필수
-   `확장 관리 → 개발자 모드 ON → Tampermonkey 세부정보 → 사용자 스크립트 허용 ON`
-   (이게 꺼져 있으면 스크립트가 아예 실행되지 않습니다)
-3. [`higgs-noti.user.js`](higgs-noti.user.js) 를 열어 설치 → 힉스필드 탭 새로고침(F5)
-4. 우측 상단에 `🎬 알림 실행됨 (진행중 N)` 배너가 뜨면 정상
+## Installation
 
-## 동작 원리
+1. Install [Tampermonkey](https://www.tampermonkey.net/) in your browser
+2. ★ **Turn on "Allow User Scripts"** — required on recent Chrome/Edge/Whale
+   `Manage extensions → Developer mode ON → Tampermonkey Details → Allow User Scripts ON`
+   (if this is off, the script won't run at all)
+3. Open [`higgs-noti.user.js`](higgs-noti.user.js) to install → refresh the Higgsfield tab (F5)
+4. It works if a `🎬 Notifier running (active N)` banner appears at the top right
 
-생성 중인 타일에는 `data-job-status="queued"`/`"processing"` 같은 **작업 상태 속성**이 붙습니다.
-이 "진행 중" 작업의 개수를 2초마다 세어, **개수가 줄어드는 순간(= 완료)** 에만 알림을 띄웁니다.
-시작할 땐 개수가 늘어나므로 오탐이 없습니다.
+## How it works
 
-## 문제 해결
+Tiles that are generating carry a **job-status attribute** such as `data-job-status="queued"`/`"processing"`.
+It counts these "in-progress" jobs every 2 seconds and fires a notification **only when the count drops (= finished)**.
+When a job starts the count goes up, so there are no false positives.
 
-- **배너조차 안 뜸** → "사용자 스크립트 허용"이 꺼져 있거나 스크립트가 비활성.
-  F12 콘솔에서 `[힉스알림] 시작, 진행중 = N` 로그를 확인하세요.
-- **OS 알림만 안 뜸** → 윈도우 집중 지원 OFF, 브라우저 사이트 알림 "허용".
-  (배너·소리가 정상이면 스크립트 자체는 OK)
-- **완료 감지가 안 됨** → 힉스필드가 `data-job-status` 속성/값을 바꾼 것.
-  생성 중인 타일을 검사(F12)해 실제 속성을 확인한 뒤 스크립트의 `ACTIVE` 정규식/셀렉터를 수정하세요.
+## Troubleshooting
 
-## 후원 (Donation)
+- **No banner at all** → "Allow User Scripts" is off, or the script is disabled.
+  Check the `[힉스알림] 시작, 진행중 = N` log in the F12 console.
+- **Only the OS notification is missing** → turn off Windows Focus Assist and set the site notification to "Allow".
+  (if the banner/sound work, the script itself is fine)
+- **Completion isn't detected** → Higgsfield changed the `data-job-status` attribute/value.
+  Inspect a generating tile (F12), check the actual attribute, then adjust the `ACTIVE` regex/selector in the script.
 
-이 도구가 도움이 되었다면 후원으로 응원해 주세요 🙏
+## Donation
+
+If this tool helped you, please consider supporting it 🙏
 
 [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-db61a2?logo=githubsponsors)](https://github.com/sponsors/happybinnyy)
 
 - GitHub Sponsors: https://github.com/sponsors/happybinnyy
 
-리포 상단의 **♥ Sponsor** 버튼으로도 후원할 수 있습니다.
+You can also sponsor via the **♥ Sponsor** button at the top of the repo.
 
-## 라이선스
+## License
 
 [MIT](LICENSE)
 
 ---
 
-<sub>힉스노티는 앞으로 여러 AI 편의 도구를 모으는 **AI Field** 프로젝트의 첫 도구입니다.</sub>
+<sub>Higgs Noti is the first tool of the upcoming **AI Field** project, which will gather various AI convenience tools.</sub>
