@@ -1,10 +1,20 @@
 // ==UserScript==
 // @name         Higgs Noti — Higgsfield Generation Notifier
 // @name:ko      힉스노티 — 힉스필드 생성 완료 알림
+// @name:zh-CN   Higgs Noti — Higgsfield 生成完成通知
+// @name:ru      Higgs Noti — уведомление о завершении генерации Higgsfield
+// @name:es      Higgs Noti — Notificador de generación de Higgsfield
+// @name:pt-BR   Higgs Noti — Notificador de geração do Higgsfield
+// @name:ja      Higgs Noti — Higgsfield 生成完了通知
 // @namespace    https://github.com/happybinnyy/higgs-noti
 // @version      1.0.0
 // @description  Notifies with an in-page banner, a sound, and a desktop notification when a Higgsfield video generation finishes. Unofficial, not affiliated with Higgsfield.
 // @description:ko 힉스필드 영상 생성이 끝나면 화면 배너 + 소리 + 데스크톱 알림으로 알려줍니다. 비공식 도구(제작사와 무관).
+// @description:zh-CN 当 Higgsfield 视频生成完成时，通过页面横幅、提示音和桌面通知提醒你。非官方工具，与 Higgsfield 无关。
+// @description:ru Уведомляет баннером на странице, звуком и уведомлением на рабочем столе о завершении генерации видео в Higgsfield. Неофициальный, не связан с Higgsfield.
+// @description:es Avisa con un banner en pantalla, un sonido y una notificación de escritorio cuando termina la generación de un vídeo en Higgsfield. No oficial, sin relación con Higgsfield.
+// @description:pt-BR Avisa com um banner na tela, um som e uma notificação na área de trabalho quando a geração de um vídeo no Higgsfield termina. Não oficial, sem vínculo com a Higgsfield.
+// @description:ja Higgsfield の動画生成が完了すると、画面バナー・音・デスクトップ通知で知らせます。非公式で、Higgsfield とは無関係です。
 // @author       happybinnyy
 // @match        https://higgsfield.ai/*
 // @match        https://*.higgsfield.ai/*

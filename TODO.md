@@ -38,9 +38,9 @@ GreasyFork는 자기가 호스팅하는 스크립트의 `@downloadURL`/`@updateU
   "Sync this script from a URL"에 GitHub raw URL을 지정
   → GitHub이 원본(source of truth), GreasyFork가 자동으로 끌어와 갱신.
   → GitHub 스크립트 고치면 GreasyFork도 자동 최신화, 통계·검색은 GreasyFork에서.
-  - raw URL: `https://raw.githubusercontent.com/happybinnyy/higgs-noti/main/higgs-noti.user.js`
+  - raw URL: `https://raw.githubusercontent.com/happybinnyy/higgs-noti/main/higgs-noti.user.js` (HTTP 200 확인, 2026-07-02)
 - **(B) 코드 직접 붙여넣기**: 매 업데이트마다 GreasyFork에서 수동으로 새 버전 붙여넣어야 함(관리 번거로움).
-- [ ] A/B 중 방식 확정 (A 권장)
+- [x] A/B 중 방식 확정 → **(A) 외부 URL 동기화** (GitHub이 원본, 자동 갱신)
 
 ### 3-3. 게시 후 마무리
 - [ ] README "설치" 섹션에 GreasyFork 설치 링크 추가 (Tampermonkey 안내와 병기)
