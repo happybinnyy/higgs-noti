@@ -7,7 +7,7 @@
 // @name:pt-BR   Higgs Noti — Notificador de geração do Higgsfield
 // @name:ja      Higgs Noti — Higgsfield 生成完了通知
 // @namespace    https://github.com/happybinnyy/higgs-noti
-// @version      1.0.1
+// @version      1.0.2
 // @description  Notifies with an in-page banner, a sound, and a desktop notification when a Higgsfield video generation finishes. Unofficial, not affiliated with Higgsfield.
 // @description:ko 힉스필드 영상 생성이 끝나면 화면 배너 + 소리 + 데스크톱 알림으로 알려줍니다. 비공식 도구(제작사와 무관).
 // @description:zh-CN 当 Higgsfield 视频生成完成时，通过页面横幅、提示音和桌面通知提醒你。非官方工具，与 Higgsfield 无关。
@@ -60,41 +60,35 @@
   }
   window.addEventListener('focus', ()=>{ document.title=document.title.replace(/^✅ /,''); });
 
-  // ── 완료 감지: data-job-status 가 "진행 중"인 작업 수 "감소" = 완료 ──
-  // 생성 중 타일엔 data-job-status="queued"/"processing" 등이 붙는다.
-  // 시작 → 진행중 +1(알림 X) / 완료 → 상태가 바뀌거나 요소 사라져 -1(알림 O).
+  // ── 완료 감지: 작업 tile을 asset-id로 추적, "진행중 → 완료" 전환만 알림 ──
+  // 실측(2026-07-02): 완료돼도 tile은 사라지지 않고 data-job-status가 "completed"로 바뀐다.
+  //   진행중=queued/processing 등(ACTIVE), 완료=completed 등(DONE). 모두 data-asset-id 보유.
+  // → 이전에 진행중이던 id가 "완료 상태로 바뀐" 경우에만 알림.
+  //   화면 전환/스크롤로 tile이 통째로 사라지는 경우(id 소멸)는 완료로 치지 않아 오탐 없음.
   const ACTIVE = /^(queued|processing|running|pending|in_progress|inprogress|generating|starting|rendering|initializing|waiting)$/;
-  function getActive(){
-    let n = 0;
+  const DONE   = /^(completed|complete|succeeded|success|done|finished|ready)$/;
+  function scan(){
+    const active = new Set(), done = new Set();
     document.querySelectorAll('[data-job-status]').forEach(el=>{
-      if (ACTIVE.test((el.getAttribute('data-job-status')||'').toLowerCase())) n++;
+      const id = el.getAttribute('data-asset-id');
+      if (!id) return;
+      const s = (el.getAttribute('data-job-status')||'').toLowerCase();
+      if (ACTIVE.test(s)) active.add(id);
+      else if (DONE.test(s)) done.add(id);
     });
-    return n;
+    return { active, done };
   }
 
-  // 화면 전환(좌측 폴더/프로젝트 이동 등)으로 진행 중 타일이 통째로 사라지면
-  // "개수 감소"를 완료로 오인한다. 힉스필드는 SPA라 이동 시 URL이 바뀌므로,
-  // URL 변화를 감지해 전환 직후 몇 틱 동안은 완료 판정을 보류(오탐 방지)한다.
-  let last = getActive();
-  let lastHref = location.href;
-  let settle = 0; // 이동 직후 뷰 재렌더가 안정될 때까지 건너뛸 틱 수
-  console.log('[힉스알림] 시작, 진행중 =', last);
-  banner('알림 실행됨 (진행중 '+last+')');
+  let prev = scan().active;
+  console.log('[힉스알림] 시작, 진행중 =', prev.size);
+  banner('알림 실행됨 (진행중 '+prev.size+')');
 
   setInterval(()=>{
-    if (location.href !== lastHref) {   // 화면 전환 감지
-      lastHref = location.href;
-      settle = 3;                       // 약 6초(2초×3) 동안 완료 판정 보류
-    }
-
-    const now = getActive();
-    if (now !== last) console.log('[힉스알림] 진행중 =', now);
-
-    if (settle > 0) {
-      settle--;                         // 전환 직후 개수 변동은 완료가 아님 → 기준만 갱신
-    } else if (now < last) {
-      notify('영상 생성 완료! (진행중 '+last+' → '+now+')');
-    }
-    last = now;
+    const { active, done } = scan();
+    let finished = 0;
+    prev.forEach(id=>{ if (!active.has(id) && done.has(id)) finished++; });  // 진행중→완료 전환만
+    if (active.size !== prev.size) console.log('[힉스알림] 진행중 =', active.size);
+    if (finished > 0) notify('영상 생성 완료! ('+finished+'개)');
+    prev = active;
   }, 2000);
 })();
