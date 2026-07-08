@@ -7,7 +7,7 @@
 // @name:pt-BR   Higgs Noti — Notificador de geração do Higgsfield
 // @name:ja      Higgs Noti — Higgsfield 生成完了通知
 // @namespace    https://github.com/happybinnyy/higgs-noti
-// @version      1.0.2
+// @version      1.0.3
 // @description  Notifies with an in-page banner, a sound, and a desktop notification when a Higgsfield video generation finishes. Unofficial, not affiliated with Higgsfield.
 // @description:ko 힉스필드 영상 생성이 끝나면 화면 배너 + 소리 + 데스크톱 알림으로 알려줍니다. 비공식 도구(제작사와 무관).
 // @description:zh-CN 当 Higgsfield 视频生成完成时，通过页面横幅、提示音和桌面通知提醒你。非官方工具，与 Higgsfield 无关。
@@ -60,35 +60,36 @@
   }
   window.addEventListener('focus', ()=>{ document.title=document.title.replace(/^✅ /,''); });
 
-  // ── 완료 감지: 작업 tile을 asset-id로 추적, "진행중 → 완료" 전환만 알림 ──
-  // 실측(2026-07-02): 완료돼도 tile은 사라지지 않고 data-job-status가 "completed"로 바뀐다.
-  //   진행중=queued/processing 등(ACTIVE), 완료=completed 등(DONE). 모두 data-asset-id 보유.
-  // → 이전에 진행중이던 id가 "완료 상태로 바뀐" 경우에만 알림.
-  //   화면 전환/스크롤로 tile이 통째로 사라지는 경우(id 소멸)는 완료로 치지 않아 오탐 없음.
+  // ── 완료 감지 ──
+  // 진행중=ACTIVE(queued/processing 등), 그 외(완료 등)=rest. 모두 data-asset-id 보유.
+  // 진행중이던 tile이 사라졌을 때:
+  //   (a) 같은 화면이면 → 완료.  (b) 폴더 이동/스크롤로 그리드가 통째로 바뀐 것이면 → 무시(오탐 방지).
+  // "같은 화면인지"는 직전 non-active tile들이 지금도 절반 이상 남아있는지(겹침)로 판정.
+  // (완료 시 tile의 id가 바뀌는 경우가 있어, "같은 id 전환"이 아니라 "화면 안정성"으로 본다.)
   const ACTIVE = /^(queued|processing|running|pending|in_progress|inprogress|generating|starting|rendering|initializing|waiting)$/;
-  const DONE   = /^(completed|complete|succeeded|success|done|finished|ready)$/;
   function scan(){
-    const active = new Set(), done = new Set();
+    const active = new Set(), rest = new Set();
     document.querySelectorAll('[data-job-status]').forEach(el=>{
       const id = el.getAttribute('data-asset-id');
       if (!id) return;
-      const s = (el.getAttribute('data-job-status')||'').toLowerCase();
-      if (ACTIVE.test(s)) active.add(id);
-      else if (DONE.test(s)) done.add(id);
+      (ACTIVE.test((el.getAttribute('data-job-status')||'').toLowerCase()) ? active : rest).add(id);
     });
-    return { active, done };
+    return { active, rest };
   }
+  const overlap = (a,b)=>{ let n=0; a.forEach(x=>{ if(b.has(x)) n++; }); return n; };
 
-  let prev = scan().active;
-  console.log('[힉스알림] 시작, 진행중 =', prev.size);
-  banner('알림 실행됨 (진행중 '+prev.size+')');
+  let prev = scan();
+  console.log('[힉스알림] 시작, 진행중 =', prev.active.size);
+  banner('알림 실행됨 (진행중 '+prev.active.size+')');
 
   setInterval(()=>{
-    const { active, done } = scan();
+    const cur = scan();
+    const stable = prev.rest.size===0 ? true : overlap(prev.rest, cur.rest) >= prev.rest.size*0.5;
     let finished = 0;
-    prev.forEach(id=>{ if (!active.has(id) && done.has(id)) finished++; });  // 진행중→완료 전환만
-    if (active.size !== prev.size) console.log('[힉스알림] 진행중 =', active.size);
-    if (finished > 0) notify('영상 생성 완료! ('+finished+'개)');
-    prev = active;
+    prev.active.forEach(id=>{ if (!cur.active.has(id)) finished++; });   // 진행중이던 tile이 사라짐
+    if (cur.active.size !== prev.active.size)
+      console.log('[힉스알림] 진행중 =', cur.active.size, '| stable=', stable, '| finished=', finished);
+    if (stable && finished > 0) notify('영상 생성 완료! ('+finished+'개)');
+    prev = cur;
   }, 2000);
 })();
