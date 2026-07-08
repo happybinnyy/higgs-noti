@@ -27,8 +27,8 @@ Generation time varies every time, so you no longer need to keep watching the ta
 ## How it works
 
 Tiles that are generating carry a **job-status attribute** such as `data-job-status="queued"`/`"processing"`.
-It counts these "in-progress" jobs every 2 seconds and fires a notification **only when the count drops (= finished)**.
-When a job starts the count goes up, so there are no false positives.
+When an in-progress tile disappears, it fires a notification **only if the rest of the list (view) stayed the same** — i.e. a real completion.
+If the whole list changes because you switched folders or scrolled, that's told apart from a completion, so there are no false alarms.
 
 ## Troubleshooting
 

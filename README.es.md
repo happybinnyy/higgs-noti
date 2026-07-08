@@ -27,8 +27,8 @@ El tiempo de generación varía cada vez, así que ya no tienes que estar pendie
 ## Cómo funciona
 
 Las tarjetas que se están generando llevan un **atributo de estado de tarea** como `data-job-status="queued"`/`"processing"`.
-Cuenta estas tareas "en curso" cada 2 segundos y lanza un aviso **solo cuando el número disminuye (= terminado)**.
-Al iniciar una tarea el número sube, por lo que no hay falsos positivos.
+Cuando una tarjeta "en curso" desaparece, lanza un aviso **solo si el resto de la lista (vista) se mantuvo igual**, es decir, una finalización real.
+Si toda la lista cambia porque cambiaste de carpeta o te desplazaste, se distingue de una finalización, así que no hay falsas alarmas.
 
 ## Solución de problemas
 

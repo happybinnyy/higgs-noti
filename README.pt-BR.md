@@ -27,8 +27,8 @@ O tempo de geração varia a cada vez, então você não precisa mais ficar de o
 ## Como funciona
 
 Os blocos que estão gerando têm um **atributo de status da tarefa** como `data-job-status="queued"`/`"processing"`.
-Ele conta essas tarefas "em andamento" a cada 2 segundos e dispara um aviso **somente quando o número diminui (= concluído)**.
-Ao iniciar uma tarefa o número aumenta, então não há falsos positivos.
+Quando um bloco "em andamento" desaparece, ele dispara um aviso **somente se o restante da lista (tela) permaneceu igual** — ou seja, uma conclusão real.
+Se a lista inteira muda porque você trocou de pasta ou rolou, isso é distinguido de uma conclusão, então não há alarmes falsos.
 
 ## Solução de problemas
 
