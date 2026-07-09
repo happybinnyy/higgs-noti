@@ -7,7 +7,7 @@
 // @name:pt-BR   Higgs Noti — Notificador de geração do Higgsfield
 // @name:ja      Higgs Noti — Higgsfield 生成完了通知
 // @namespace    https://github.com/happybinnyy/higgs-noti
-// @version      1.0.3
+// @version      1.0.4
 // @description  Notifies with an in-page banner, a sound, and a desktop notification when a Higgsfield video generation finishes. Unofficial, not affiliated with Higgsfield.
 // @description:ko 힉스필드 영상 생성이 끝나면 화면 배너 + 소리 + 데스크톱 알림으로 알려줍니다. 비공식 도구(제작사와 무관).
 // @description:zh-CN 当 Higgsfield 视频生成完成时，通过页面横幅、提示音和桌面通知提醒你。非官方工具，与 Higgsfield 无关。
@@ -77,19 +77,28 @@
     return { active, rest };
   }
   const overlap = (a,b)=>{ let n=0; a.forEach(x=>{ if(b.has(x)) n++; }); return n; };
+  const fmt = (ms)=>{ const s=Math.round(ms/1000); if(s<60) return s+'초'; const m=Math.floor(s/60), r=s%60; return r ? m+'분 '+r+'초' : m+'분'; };
 
   let prev = scan();
+  const startAt = new Map();                          // asset-id → 진행중으로 처음 본 시각(ms). 완료 시 경과시간 계산.
+  prev.active.forEach(id=> startAt.set(id, Date.now()));
   console.log('[힉스알림] 시작, 진행중 =', prev.active.size);
   banner('알림 실행됨 (진행중 '+prev.active.size+')');
 
   setInterval(()=>{
+    const now = Date.now();
     const cur = scan();
+    cur.active.forEach(id=>{ if(!startAt.has(id)) startAt.set(id, now); });   // 새로 시작된 작업 시각 기록
     const stable = prev.rest.size===0 ? true : overlap(prev.rest, cur.rest) >= prev.rest.size*0.5;
-    let finished = 0;
-    prev.active.forEach(id=>{ if (!cur.active.has(id)) finished++; });   // 진행중이던 tile이 사라짐
+    const done = [];
+    prev.active.forEach(id=>{ if (!cur.active.has(id)) done.push(id); });     // 진행중이던 tile이 사라짐
     if (cur.active.size !== prev.active.size)
-      console.log('[힉스알림] 진행중 =', cur.active.size, '| stable=', stable, '| finished=', finished);
-    if (stable && finished > 0) notify('영상 생성 완료! ('+finished+'개)');
+      console.log('[힉스알림] 진행중 =', cur.active.size, '| stable=', stable, '| finished=', done.length);
+    if (stable && done.length > 0) {
+      let maxMs = 0;
+      done.forEach(id=>{ const t=startAt.get(id); if(t) maxMs=Math.max(maxMs, now-t); startAt.delete(id); });
+      notify('영상 생성 완료! ('+done.length+'개, '+fmt(maxMs)+' 걸림)');
+    }
     prev = cur;
   }, 2000);
 })();
