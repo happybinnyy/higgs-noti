@@ -14,6 +14,7 @@ Generation time varies every time, so you no longer need to keep watching the ta
 - **Sound** — plays once you've clicked the page at least once (browser autoplay policy)
 - **Desktop notification** — when OS/browser notifications are allowed
 - **Tab title ✅ marker** — noticeable even when you're on another tab
+- **Generation stats panel** — the 📊 button (bottom-right): today/this-week/all counts, generation-time stats, weekday & hour distribution, and CSV export
 
 ## Installation
 

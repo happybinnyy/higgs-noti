@@ -14,6 +14,7 @@ O tempo de geração varia a cada vez, então você não precisa mais ficar de o
 - **Som** — toca depois que você clicar na página pelo menos uma vez (política de reprodução automática do navegador)
 - **Notificação na área de trabalho** — quando as notificações do SO/navegador são permitidas
 - **Marca ✅ no título da aba** — perceptível mesmo quando você está em outra aba
+- **Painel de estatísticas** — o botão 📊 (canto inferior direito): contagens de hoje/esta semana/total, estatísticas de tempo de geração, distribuição por dia da semana e hora, e exportação para CSV
 
 ## Instalação
 

@@ -7,7 +7,7 @@
 // @name:pt-BR   Higgs Noti — Notificador de geração do Higgsfield
 // @name:ja      Higgs Noti — Higgsfield 生成完了通知
 // @namespace    https://github.com/happybinnyy/higgs-noti
-// @version      1.0.4
+// @version      1.1.0
 // @description  Notifies with an in-page banner, a sound, and a desktop notification when a Higgsfield video generation finishes. Unofficial, not affiliated with Higgsfield.
 // @description:ko 힉스필드 영상 생성이 끝나면 화면 배너 + 소리 + 데스크톱 알림으로 알려줍니다. 비공식 도구(제작사와 무관).
 // @description:zh-CN 当 Higgsfield 视频生成完成时，通过页面横幅、提示音和桌面通知提醒你。非官方工具，与 Higgsfield 无关。
@@ -19,6 +19,8 @@
 // @match        https://higgsfield.ai/*
 // @match        https://*.higgsfield.ai/*
 // @grant        GM_notification
+// @grant        GM_setValue
+// @grant        GM_getValue
 // @run-at       document-idle
 // @license      MIT
 // @homepageURL  https://github.com/happybinnyy/higgs-noti
@@ -77,7 +79,69 @@
     return { active, rest };
   }
   const overlap = (a,b)=>{ let n=0; a.forEach(x=>{ if(b.has(x)) n++; }); return n; };
-  const fmt = (ms)=>{ const s=Math.round(ms/1000); if(s<60) return s+'초'; const m=Math.floor(s/60), r=s%60; return r ? m+'분 '+r+'초' : m+'분'; };
+  const fmtS = (s)=>{ if(s<60) return s+'초'; const m=Math.floor(s/60), r=s%60; return r ? m+'분 '+r+'초' : m+'분'; };
+  const fmt = (ms)=> fmtS(Math.round(ms/1000));
+
+  // ── 통계 저장/조회 (GM_setValue 우선, 없으면 localStorage) ──
+  const SKEY = 'hf_noti_stats_v1';
+  function loadStats(){ try{ if(typeof GM_getValue!=='undefined'){ const v=GM_getValue(SKEY,''); return v?JSON.parse(v):[]; } }catch(e){} try{ return JSON.parse(localStorage.getItem(SKEY)||'[]'); }catch(e){ return []; } }
+  function saveStats(a){ const s=JSON.stringify(a); try{ if(typeof GM_setValue!=='undefined'){ GM_setValue(SKEY,s); return; } }catch(e){} try{ localStorage.setItem(SKEY,s); }catch(e){} }
+  function recordDone(durSec){ const a=loadStats(); a.push({t:Date.now(), d:durSec}); if(a.length>3000) a.splice(0,a.length-3000); saveStats(a); }
+
+  // ── 통계 패널 ──
+  const WD=['일','월','화','수','목','금','토'];
+  const pad=n=>('0'+n).slice(-2);
+  function agg(){
+    const a=loadStats();
+    const d0=new Date(); d0.setHours(0,0,0,0);
+    const w0=new Date(d0); w0.setDate(d0.getDate()-((d0.getDay()+6)%7));      // 이번주 월요일 00:00
+    const ds=a.map(r=>r.d).filter(x=>x>0), sum=ds.reduce((p,c)=>p+c,0);
+    const stat=ds.length?{avg:Math.round(sum/ds.length),min:Math.min.apply(0,ds),max:Math.max.apply(0,ds),sum}:{avg:0,min:0,max:0,sum:0};
+    const byDay=[0,0,0,0,0,0,0], byHour=new Array(24).fill(0);
+    a.forEach(r=>{ const dt=new Date(r.t); byDay[dt.getDay()]++; byHour[dt.getHours()]++; });
+    return {a, today:a.filter(r=>r.t>=d0.getTime()).length, week:a.filter(r=>r.t>=w0.getTime()).length, total:a.length, stat, byDay, byHour};
+  }
+  function bars(arr, labels){
+    const max=Math.max.apply(0,[1].concat(arr));
+    return arr.map((v,i)=>'<div style="display:flex;align-items:center;gap:6px;margin:1px 0"><span style="width:26px;color:#aaa;font-size:11px">'+labels[i]+'</span><span style="flex:1;background:#333;border-radius:3px;overflow:hidden"><span style="display:block;height:9px;width:'+Math.round(v/max*100)+'%;background:#4a9eff"></span></span><span style="width:22px;text-align:right;color:#ccc;font-size:11px">'+v+'</span></div>').join('');
+  }
+  function panelHTML(){
+    const g=agg();
+    const recent=g.a.slice(-15).reverse().map(r=>{ const dt=new Date(r.t); return '<div style="display:flex;justify-content:space-between;font-size:12px;padding:2px 0;border-bottom:1px solid #2a2a2a"><span style="color:#bbb">'+(dt.getMonth()+1)+'/'+dt.getDate()+' ('+WD[dt.getDay()]+') '+pad(dt.getHours())+':'+pad(dt.getMinutes())+'</span><span style="color:#fff">'+fmtS(r.d)+'</span></div>'; }).join('') || '<div style="color:#888;font-size:12px">아직 기록 없음</div>';
+    const tile=(n,l)=>'<div style="flex:1;background:#1e1e1e;border-radius:8px;padding:8px;text-align:center"><div style="font-size:20px;font-weight:700">'+n+'</div><div style="font-size:11px;color:#999">'+l+'</div></div>';
+    return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-size:15px">🎬 생성 통계</b><span id="__hf_x" style="cursor:pointer;color:#888;font-size:18px">×</span></div>'
+     +'<div style="display:flex;gap:8px;margin-bottom:10px">'+tile(g.today,'오늘')+tile(g.week,'이번주')+tile(g.total,'전체')+'</div>'
+     +'<div style="font-size:12px;color:#ccc;margin-bottom:10px;line-height:1.7">소요 시간 · 평균 <b>'+fmtS(g.stat.avg)+'</b> / 최소 '+fmtS(g.stat.min)+' / 최대 '+fmtS(g.stat.max)+' / 합계 '+fmtS(g.stat.sum)+'</div>'
+     +'<div style="font-size:12px;color:#999;margin:6px 0 3px">요일별</div>'+bars(g.byDay, WD)
+     +'<div style="font-size:12px;color:#999;margin:8px 0 3px">시간대별 (0~23시)</div>'+bars(g.byHour, g.byHour.map((_,i)=>i))
+     +'<div style="font-size:12px;color:#999;margin:8px 0 3px">최근 기록</div>'+recent
+     +'<div style="display:flex;gap:8px;margin-top:12px"><button id="__hf_csv" style="flex:1;background:#4a9eff;color:#fff;border:0;border-radius:6px;padding:8px;cursor:pointer;font-size:12px">CSV 내보내기</button><button id="__hf_reset" style="background:#333;color:#ccc;border:0;border-radius:6px;padding:8px 12px;cursor:pointer;font-size:12px">초기화</button></div>';
+  }
+  function exportCSV(){
+    const a=loadStats();
+    const rows=[['완료일시','소요초','소요','요일','시']].concat(a.map(r=>{ const dt=new Date(r.t); return [dt.getFullYear()+'-'+pad(dt.getMonth()+1)+'-'+pad(dt.getDate())+' '+pad(dt.getHours())+':'+pad(dt.getMinutes())+':'+pad(dt.getSeconds()), r.d, fmtS(r.d), WD[dt.getDay()], dt.getHours()]; }));
+    const csv='﻿'+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+    const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+    const link=document.createElement('a'); link.href=url; link.download='higgs-noti-stats.csv'; link.click(); setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }
+  function isPanelOpen(){ const p=document.getElementById('__hf_panel__'); return p && p.style.display==='block'; }
+  function openPanel(){
+    let p=document.getElementById('__hf_panel__');
+    if(!p){ p=document.createElement('div'); p.id='__hf_panel__';
+      p.style.cssText='position:fixed;bottom:66px;right:16px;z-index:2147483647;width:300px;max-height:72vh;overflow:auto;background:#141414;color:#fff;padding:14px;border-radius:12px;border:1px solid #333;box-shadow:0 8px 32px rgba(0,0,0,.5);font:400 13px/1.4 system-ui,sans-serif';
+      document.body.appendChild(p);
+    }
+    p.innerHTML=panelHTML(); p.style.display='block';
+    p.querySelector('#__hf_x').onclick=()=>{ p.style.display='none'; };
+    p.querySelector('#__hf_csv').onclick=exportCSV;
+    p.querySelector('#__hf_reset').onclick=()=>{ if(confirm('생성 통계 기록을 모두 삭제할까요?')){ saveStats([]); openPanel(); } };
+  }
+  (function statBtn(){
+    const b=document.createElement('div'); b.id='__hf_statbtn__'; b.textContent='📊'; b.title='힉스노티 생성 통계';
+    b.style.cssText='position:fixed;bottom:16px;right:16px;z-index:2147483646;width:44px;height:44px;border-radius:50%;background:#141414;border:1px solid #333;box-shadow:0 4px 16px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer';
+    b.onclick=()=>{ const p=document.getElementById('__hf_panel__'); if(p && p.style.display==='block') p.style.display='none'; else openPanel(); };
+    document.body.appendChild(b);
+  })();
 
   let prev = scan();
   const startAt = new Map();                          // asset-id → 진행중으로 처음 본 시각(ms). 완료 시 경과시간 계산.
@@ -96,8 +160,9 @@
       console.log('[힉스알림] 진행중 =', cur.active.size, '| stable=', stable, '| finished=', done.length);
     if (stable && done.length > 0) {
       let maxMs = 0;
-      done.forEach(id=>{ const t=startAt.get(id); if(t) maxMs=Math.max(maxMs, now-t); startAt.delete(id); });
+      done.forEach(id=>{ const t=startAt.get(id); if(t){ const ms=now-t; if(ms>maxMs) maxMs=ms; recordDone(Math.round(ms/1000)); } startAt.delete(id); });
       notify('영상 생성 완료! ('+done.length+'개, '+fmt(maxMs)+' 걸림)');
+      if (isPanelOpen()) openPanel();                 // 패널 열려 있으면 즉시 갱신
     }
     prev = cur;
   }, 2000);

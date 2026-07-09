@@ -14,6 +14,7 @@ El tiempo de generación varía cada vez, así que ya no tienes que estar pendie
 - **Sonido** — se reproduce una vez que has hecho clic en la página al menos una vez (política de reproducción automática del navegador)
 - **Notificación de escritorio** — si se permiten las notificaciones del SO/navegador
 - **Marca ✅ en el título de la pestaña** — visible aunque estés en otra pestaña
+- **Panel de estadísticas** — el botón 📊 (abajo a la derecha): recuentos de hoy/esta semana/total, estadísticas de tiempo de generación, distribución por día y hora, y exportación a CSV
 
 ## Instalación
 
