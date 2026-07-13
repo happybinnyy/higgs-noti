@@ -19,9 +19,10 @@ Generation time varies every time, so you no longer need to keep watching the ta
 ## Installation
 
 1. Install [Tampermonkey](https://www.tampermonkey.net/) in your browser
-2. ★ **Turn on "Allow User Scripts"** — required on recent Chrome/Edge/Whale
-   `Manage extensions → Developer mode ON → Tampermonkey Details → Allow User Scripts ON`
-   (if this is off, the script won't run at all)
+2. ★ **Enable userscript execution permission** — without this the script **will not run at all**, even after installing. It differs per browser:
+   - **Chrome / Edge (138+)**: `chrome://extensions` → Tampermonkey **Details** → turn **"Allow User Scripts"** ON
+   - **Chrome / Edge (older)**: `chrome://extensions` → turn **"Developer mode"** ON (top right)
+   - **Whale**: there is **no "Allow User Scripts" toggle at all**, so regular Tampermonkey (5.x) cannot run userscripts → install **Tampermonkey Legacy** (MV2) from the store instead; it works without this permission.
 3. Open [`higgs-noti.user.js`](higgs-noti.user.js) to install → refresh the Higgsfield tab (F5)
 4. It works if a `🎬 Notifier running (active N)` banner appears at the top right
 

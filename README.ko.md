@@ -19,9 +19,10 @@
 ## 설치
 
 1. 브라우저에 [Tampermonkey](https://www.tampermonkey.net/) 설치
-2. ★ **"사용자 스크립트 허용(Allow User Scripts)" 켜기** — 최신 크롬/엣지/웨일 필수
-   `확장 관리 → 개발자 모드 ON → Tampermonkey 세부정보 → 사용자 스크립트 허용 ON`
-   (이게 꺼져 있으면 스크립트가 아예 실행되지 않습니다)
+2. ★ **유저스크립트 실행 권한 켜기** — 이걸 안 켜면 설치해도 스크립트가 **아예 실행되지 않습니다.** 브라우저마다 방법이 다릅니다:
+   - **크롬 / 엣지 (138+)**: `chrome://extensions` → Tampermonkey **세부정보** → **"사용자 스크립트 허용"** ON
+   - **크롬 / 엣지 (구버전)**: `chrome://extensions` → 우측 상단 **"개발자 모드"** ON
+   - **웨일(Whale)**: "사용자 스크립트 허용" 토글이 **아예 없습니다.** 일반 Tampermonkey(5.x)로는 실행 불가 → 웹스토어에서 **Tampermonkey Legacy**(MV2)를 설치하세요. 이 권한 없이 바로 동작합니다.
 3. [`higgs-noti.user.js`](higgs-noti.user.js) 를 열어 설치 → 힉스필드 탭 새로고침(F5)
 4. 우측 상단에 `🎬 알림 실행됨 (진행중 N)` 배너가 뜨면 정상
 

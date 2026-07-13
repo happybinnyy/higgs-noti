@@ -19,9 +19,10 @@
 ## 安装
 
 1. 在浏览器中安装 [Tampermonkey](https://www.tampermonkey.net/)
-2. ★ **开启“允许用户脚本（Allow User Scripts）”** — 最新版 Chrome/Edge/Whale 必需
-   `管理扩展 → 开发者模式 ON → Tampermonkey 详情 → 允许用户脚本 ON`
-   （若关闭，脚本将完全无法运行）
+2. ★ **开启用户脚本执行权限** — 不开启的话，即使安装了脚本也**完全不会运行**。各浏览器方法不同：
+   - **Chrome / Edge (138+)**：`chrome://extensions` → Tampermonkey **详情** → 开启**“允许用户脚本”**
+   - **Chrome / Edge（旧版）**：`chrome://extensions` → 右上角开启**“开发者模式”**
+   - **Whale 浏览器**：**完全没有**“允许用户脚本”开关，普通 Tampermonkey (5.x) 无法运行用户脚本 → 请改从商店安装 **Tampermonkey Legacy**（MV2），它无需此权限即可运行。
 3. 打开 [`higgs-noti.user.js`](higgs-noti.user.js) 进行安装 → 刷新 Higgsfield 标签页（F5）
 4. 右上角出现 `🎬 Notifier running (active N)` 横幅即表示正常
 
