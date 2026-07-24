@@ -7,7 +7,7 @@
 // @name:pt-BR   Higgs Noti — Notificador de geração do Higgsfield
 // @name:ja      Higgs Noti — Higgsfield 生成完了通知
 // @namespace    https://github.com/happybinnyy/higgs-noti
-// @version      1.1.0
+// @version      1.1.1
 // @description  Notifies with an in-page banner, a sound, and a desktop notification when a Higgsfield video generation finishes. Unofficial, not affiliated with Higgsfield.
 // @description:ko 힉스필드 영상 생성이 끝나면 화면 배너 + 소리 + 데스크톱 알림으로 알려줍니다. 비공식 도구(제작사와 무관).
 // @description:zh-CN 当 Higgsfield 视频生成完成时，通过页面横幅、提示音和桌面通知提醒你。非官方工具，与 Higgsfield 无关。
@@ -136,12 +136,15 @@
     p.querySelector('#__hf_csv').onclick=exportCSV;
     p.querySelector('#__hf_reset').onclick=()=>{ if(confirm('생성 통계 기록을 모두 삭제할까요?')){ saveStats([]); openPanel(); } };
   }
-  (function statBtn(){
+  // SPA가 화면 전환 시 body를 갈아끼우면 버튼이 지워지므로, 없으면 매 틱 다시 만든다.
+  function ensureStatBtn(){
+    if (!document.body || document.getElementById('__hf_statbtn__')) return;
     const b=document.createElement('div'); b.id='__hf_statbtn__'; b.textContent='📊'; b.title='힉스노티 생성 통계';
     b.style.cssText='position:fixed;bottom:16px;right:16px;z-index:2147483646;width:44px;height:44px;border-radius:50%;background:#141414;border:1px solid #333;box-shadow:0 4px 16px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer';
     b.onclick=()=>{ const p=document.getElementById('__hf_panel__'); if(p && p.style.display==='block') p.style.display='none'; else openPanel(); };
     document.body.appendChild(b);
-  })();
+  }
+  ensureStatBtn();
 
   let prev = scan();
   const startAt = new Map();                          // asset-id → 진행중으로 처음 본 시각(ms). 완료 시 경과시간 계산.
@@ -150,6 +153,7 @@
   banner('알림 실행됨 (진행중 '+prev.active.size+')');
 
   setInterval(()=>{
+    ensureStatBtn();                                   // 화면 전환으로 사라졌으면 복구
     const now = Date.now();
     const cur = scan();
     cur.active.forEach(id=>{ if(!startAt.has(id)) startAt.set(id, now); });   // 새로 시작된 작업 시각 기록
